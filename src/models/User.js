@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const { Schema } = mongoose;
 
@@ -8,6 +9,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     lowercase: true,
+    trim: true,
     unique: true,
   },
   passwordHash: { type: String, required: true },
@@ -24,6 +26,21 @@ UserSchema.methods.setPassword = function setPassword(password) {
   // TODO
   // Get salt from safety place
   this.passwordHash = bcrypt.hashSync(password, 'So1meSA_lt_is09HEre%<');
+};
+
+UserSchema.methods.generateJWT = function generateJWT() {
+  return jwt.sign({
+    email: this.email,
+    confirmed: this.confirmed,
+  }, 'So1meSA_lt_is09HEre%<');
+};
+
+UserSchema.methods.toAuthJSON = function toAuthJSON() {
+  return {
+    email: this.email,
+    confirmed: this.confirmed,
+    token: this.generateJWT(),
+  };
 };
 
 module.exports = mongoose.model('User', UserSchema);

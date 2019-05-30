@@ -19,7 +19,9 @@
     "cors": "^2.8.5",
     "express": "^4.17.0",
     "express-promise-router": "^3.0.3",
+    "husky": "^2.3.0",
     "jsonwebtoken": "^8.5.1",
+    "lint-staged": "^8.1.7",
     "mongodb": "^3.2.5",
     "mongoose": "^5.5.9",
     "validator": "^11.0.0"

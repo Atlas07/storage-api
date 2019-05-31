@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/app.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "jest",
     "lint": "eslint --debug src/**/*.{js,jsx}",
     "lint:write": "eslint --debug src/**/*.{js,jsx} --fix --quiet",
     "prettier": "prettier --write src/**/*.{js,jsx}"
@@ -30,13 +30,16 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jest": "^22.6.4",
+    "jest": "^24.8.0",
     "nodemon": "^1.19.0",
     "prettier": "^1.17.1",
     "prettier-eslint": "^8.8.2"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
     }
   },
   "lint-staged": {

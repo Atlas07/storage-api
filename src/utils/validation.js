@@ -2,6 +2,9 @@
 const validator = require('validator');
 
 const isValidPassword = (password) => {
+  if (typeof password !== 'string') {
+    return false;
+  }
   // at least one digit
   // at least one lower case
   // at least one upper case
@@ -11,7 +14,7 @@ const isValidPassword = (password) => {
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&_`?*])(?=.{8,})',
   );
 
-  return password.match(passwordRegexp);
+  return !!password.match(passwordRegexp);
 };
 
 const isValidEmail = email => validator.isEmail(email);

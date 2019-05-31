@@ -23,16 +23,15 @@ UserSchema.methods.isValidPassword = function isValidPassword(password) {
 };
 
 UserSchema.methods.setPassword = function setPassword(password) {
-  // TODO
-  // Get salt from safety place
-  this.passwordHash = bcrypt.hashSync(password, 'So1meSA_lt_is09HEre%<');
+  // bcrypt.hashSync(password, 'salt')
+  this.passwordHash = bcrypt.hashSync(password, '$2a$11$xa3duPWd7keIhu7rF50g2z');
 };
 
 UserSchema.methods.generateJWT = function generateJWT() {
   return jwt.sign({
     email: this.email,
     confirmed: this.confirmed,
-  }, 'So1meSA_lt_is09HEre%<');
+  }, '$2a$11$xa3duPWd7keIhu7rF50g2z');
 };
 
 UserSchema.methods.toAuthJSON = function toAuthJSON() {

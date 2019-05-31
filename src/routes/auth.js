@@ -1,34 +1,18 @@
 const Router = require('express-promise-router');
-const validator = require('validator');
 
+const { isValidEmail, isValidPassword } = require('../utils/validation');
 const User = require('../models/User');
 
 const router = new Router();
 
-router.post('/register', async (req, res) => {
+router.post('/register', (req, res) => {
   const { email, password } = req.body;
-  const isValidEmail = validator.isEmail(email);
 
-  if (!isValidEmail) {
+  if (!isValidEmail(email) || !isValidPassword(password)) {
     return res.status(400).json({ error: 'Invalid credentials' });
   }
 
-  // at least one digit
-  // at least one lower case
-  // at least one upper case
-  // at least one special symbol
-  // at least 8 characters
-  const passwordRegexp = new RegExp(
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&_`?*])(?=.{8,})',
-  );
-
-  if (!password.match(passwordRegexp)) {
-    return res.status(400).json({
-      error: 'Invalid credentials',
-    });
-  }
-
-  const user = new User();
+  const user = new User({ email });
 
   user.setPassword(password);
   user

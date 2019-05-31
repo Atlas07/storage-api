@@ -14,8 +14,8 @@ app.use(bodyParser.urlencoded({
 mountRoutes(app);
 
 mongoose
-  .connect('mongodb://db:27017/banking', { useNewUrlParser: true })
-  .then(() => console.log('connected'))
+  .connect('mongodb://db:27017/storage', { useNewUrlParser: true })
+  .then(() => console.log('db connected'))
   .catch(e => console.log(e));
 
 app.listen(constants.SERVER_PORT, () => {

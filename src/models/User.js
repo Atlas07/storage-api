@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const uniqueVaidator = require('mongoose-unique-validator');
 
 const { Schema } = mongoose;
 
@@ -28,10 +29,13 @@ UserSchema.methods.setPassword = function setPassword(password) {
 };
 
 UserSchema.methods.generateJWT = function generateJWT() {
-  return jwt.sign({
-    email: this.email,
-    confirmed: this.confirmed,
-  }, '$2a$11$xa3duPWd7keIhu7rF50g2z');
+  return jwt.sign(
+    {
+      email: this.email,
+      confirmed: this.confirmed,
+    },
+    '$2a$11$xa3duPWd7keIhu7rF50g2z',
+  );
 };
 
 UserSchema.methods.toAuthJSON = function toAuthJSON() {
@@ -41,5 +45,7 @@ UserSchema.methods.toAuthJSON = function toAuthJSON() {
     token: this.generateJWT(),
   };
 };
+
+UserSchema.plugin(uniqueVaidator, { message: 'This email already taken' });
 
 module.exports = mongoose.model('User', UserSchema);

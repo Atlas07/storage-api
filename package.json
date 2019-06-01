@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/app.js",
-    "test": "jest",
+    "test": "jest --env node",
+    "test:model": "jest --env node --testPathPattern models",
+    "test:service": "jest --env node --testPathPattern services",
     "lint": "eslint --debug src/**/*.{js,jsx}",
     "lint:write": "eslint --debug src/**/*.{js,jsx} --fix --quiet",
     "prettier": "prettier --write src/**/*.{js,jsx}"
@@ -24,6 +26,7 @@
     "lint-staged": "^8.1.7",
     "mongodb": "^3.2.5",
     "mongoose": "^5.5.9",
+    "mongoose-unique-validator": "^2.0.3",
     "validator": "^11.0.0"
   },
   "devDependencies": {

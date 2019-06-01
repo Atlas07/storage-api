@@ -1,24 +1,23 @@
 const Router = require('express-promise-router');
 
 const { isValidEmail, isValidPassword } = require('../utils/validation');
-const User = require('../models/User');
+const { User } = require('../services');
 
 const router = new Router();
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const { email, password } = req.body;
 
   if (!isValidEmail(email) || !isValidPassword(password)) {
     return res.status(400).json({ error: 'Invalid credentials' });
   }
 
-  const user = new User({ email });
-
-  user.setPassword(password);
-  user
-    .save()
-    .then(record => res.json({ user: record.toAuthJson() }))
-    .catch(e => res.status(400).json(e));
+  try {
+    const user = await User.create(email, password);
+    res.json({ user });
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
 });
 
 module.exports = router;

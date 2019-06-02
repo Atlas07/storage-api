@@ -25,7 +25,7 @@ UserSchema.methods.isValidPassword = function isValidPassword(password) {
 
 UserSchema.methods.setPassword = function setPassword(password) {
   // bcrypt.hashSync(password, 'salt')
-  this.passwordHash = bcrypt.hashSync(password, '$2a$11$xa3duPWd7keIhu7rF50g2z');
+  this.passwordHash = bcrypt.hashSync(password, process.env.JWT_SECRET);
 };
 
 UserSchema.methods.generateJWT = function generateJWT() {
@@ -34,7 +34,7 @@ UserSchema.methods.generateJWT = function generateJWT() {
       email: this.email,
       confirmed: this.confirmed,
     },
-    '$2a$11$xa3duPWd7keIhu7rF50g2z',
+    process.env.JWT_SECRET,
   );
 };
 

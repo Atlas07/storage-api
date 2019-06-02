@@ -1,7 +1,7 @@
 // const mongoose = require('mongoose');
 
 // mongoose
-//   .connect('mongodb://db:27017/storage-test', { useNewUrlParser: true })
+//   .connect(process.env.MONGODB_TEST_URL, { useNewUrlParser: true })
 //   .then(() => console.log('db-test connected'))
 //   .catch(e => console.log(e));
 

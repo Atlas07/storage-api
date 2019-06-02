@@ -1,9 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 
 const constants = require('./constants');
 const mountRoutes = require('./routes');
+
+dotenv.config();
 
 const app = express();
 
@@ -14,7 +17,7 @@ app.use(bodyParser.urlencoded({
 mountRoutes(app);
 
 mongoose
-  .connect('mongodb://db:27017/storage', { useNewUrlParser: true })
+  .connect(process.env.MONGODB_URL, { useNewUrlParser: true })
   .then(() => console.log('db connected'))
   .catch(e => console.log(e));
 

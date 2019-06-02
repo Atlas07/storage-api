@@ -10,6 +10,17 @@ const create = User => (email, password) => {
     });
 };
 
+const find = User => (email, password) => (
+  User.findOne({ email }).then((record) => {
+    if (record && record.isValidPassword(password)) {
+      return record.toAuthJSON();
+    }
+
+    throw new Error();
+  })
+);
+
 module.exports = User => ({
   create: create(User),
+  find: find(User),
 });

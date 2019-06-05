@@ -1,5 +1,7 @@
-const auth = require('./auth');
+const register = require('./register');
+const login = require('./login');
 
 module.exports = (app) => {
-  app.use('/auth', auth);
+  app.use('/register', register);
+  app.use('/login', login);
 };

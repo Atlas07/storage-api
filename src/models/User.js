@@ -24,7 +24,6 @@ UserSchema.methods.isValidPassword = function isValidPassword(password) {
 };
 
 UserSchema.methods.setPassword = function setPassword(password) {
-  // bcrypt.hashSync(password, 'salt')
   this.passwordHash = bcrypt.hashSync(password, process.env.JWT_SECRET);
 };
 

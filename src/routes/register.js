@@ -5,7 +5,7 @@ const { User } = require('../services');
 
 const router = new Router();
 
-router.post('/register', async (req, res) => {
+router.post('/', async (req, res) => {
   const { email, password } = req.body;
 
   if (!isValidEmail(email) || !isValidPassword(password)) {

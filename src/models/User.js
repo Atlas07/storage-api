@@ -17,10 +17,12 @@ const UserSchema = new Schema({
   confirmed: { type: Boolean, default: false },
   confirmationToken: { type: String, default: '' },
   registrationDate: { type: Date, required: true, default: Date.now },
-  uploads: [{
-    type: String,
-    required: true,
-  }],
+  uploads: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
 });
 
 UserSchema.methods.isValidPassword = function isValidPassword(password) {
@@ -36,6 +38,7 @@ UserSchema.methods.generateJWT = function generateJWT() {
     {
       email: this.email,
       confirmed: this.confirmed,
+      passHash: this.passwordHash,
     },
     process.env.JWT_SECRET,
   );

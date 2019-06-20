@@ -1,8 +1,11 @@
 const Router = require('express-promise-router');
 
+const { authenticate } = require('../middleware/auhenticate');
 const { User, File } = require('../services');
 
 const router = new Router();
+
+router.use(authenticate);
 
 router.post('/', async (req, res) => {
   const email = 'bar@gmail.com';

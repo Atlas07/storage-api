@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
   // decrypt(path.join(__dirname, 'test.txt.e'), 'someTimes_TheSame_9');
 
   try {
-    const file = await File.add('text.txt');
+    const file = await File.create('text.txt');
     await User.addFile(email, file.id);
 
     res.json({ uploaded: true });

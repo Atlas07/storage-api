@@ -64,11 +64,7 @@ describe('UserService test', () => {
 
   describe('User.find test', () => {
     it('finds existed user', async () => {
-      const toAuthJSON = jest.fn();
-      const isValidPassword = jest.fn().mockReturnValue(true);
       const findOne = jest.fn().mockResolvedValue({
-        toAuthJSON,
-        isValidPassword,
         record: {},
       });
 
@@ -83,8 +79,6 @@ describe('UserService test', () => {
       await user.find('test@gmail.com', 'pass');
 
       expect(findOne.mock.calls.length).toBe(1);
-      expect(isValidPassword.mock.calls.length).toBe(1);
-      expect(toAuthJSON.mock.calls.length).toBe(1);
     });
 
     it('throw err if invalid credentials provided', async () => {

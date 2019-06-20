@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
 
   try {
     const user = await User.find(email, password);
-    res.json({ user });
+    res.json({ user: user.toAuthJSON() });
   } catch (e) {
     res.status(400).json({ error: 'Invalid credentials' });
   }

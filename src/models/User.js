@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const uniqueVaidator = require('mongoose-unique-validator');
 
+const { encryptString } = require('../utils/crypt');
+
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
@@ -36,7 +38,8 @@ UserSchema.methods.setPassword = function setPassword(password) {
 UserSchema.methods.generateJWT = function generateJWT() {
   return jwt.sign(
     {
-      // id: this._id, TODO
+      // eslint-disable-next-line
+      id: this._id,
       email: this.email,
       confirmed: this.confirmed,
     },
@@ -48,10 +51,13 @@ UserSchema.methods.generateJWT = function generateJWT() {
 };
 
 UserSchema.methods.toAuthJSON = function toAuthJSON() {
+  const token = this.generateJWT();
+  const encryptedToken = encryptString(token, process.env.JWE_SECRET);
+
   return {
     email: this.email,
     confirmed: this.confirmed,
-    token: this.generateJWT(),
+    token: encryptedToken.IV + encryptedToken.data,
   };
 };
 

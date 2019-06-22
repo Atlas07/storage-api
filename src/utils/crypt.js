@@ -12,7 +12,7 @@ const getCipherKey = password => crypto
   .update(password)
   .digest();
 
-const encrypt = (filePath, password) => {
+const encryptFile = (filePath, password) => {
   const initVect = crypto.randomBytes(16);
 
   const readStream = fs.createReadStream(filePath);
@@ -30,7 +30,7 @@ const encrypt = (filePath, password) => {
     .pipe(writeStream);
 };
 
-const decrypt = (filePath, password) => {
+const decryptFile = (filePath, password) => {
   const readInitVect = fs.createReadStream(filePath, { end: 15 });
   let initVect;
 
@@ -55,6 +55,14 @@ const decrypt = (filePath, password) => {
 };
 
 const encryptString = (text, password) => {
+  if (!text || !password) {
+    return Error('Missed fields');
+  }
+
+  if (typeof text !== 'string' || typeof password !== 'string') {
+    return new Error('text and password should be strings');
+  }
+
   const key = getCipherKey(password);
   const IV = crypto.randomBytes(16);
 
@@ -68,7 +76,20 @@ const encryptString = (text, password) => {
 };
 
 const decryptString = (encrypted, password) => {
+  if (!encrypted || !encrypted.data || !encrypted.IV) {
+    return new Error('Missed fields. Encrypted should contain data and IV fields');
+  }
+
+  if (typeof encrypted.data !== 'string' || typeof encrypted.IV !== 'string') {
+    return new Error('Data and IV should be strings');
+  }
+
+  if (!password) {
+    return new Error('Missed password');
+  }
+
   const { data, IV } = encrypted;
+
   const key = getCipherKey(password);
 
   const decipher = crypto.createDecipheriv(CIPHER_ALGORITHM, key, Buffer.from(IV, 'hex'));
@@ -78,8 +99,8 @@ const decryptString = (encrypted, password) => {
 };
 
 module.exports = {
-  encrypt,
-  decrypt,
+  encryptFile,
+  decryptFile,
   encryptString,
   decryptString,
 };

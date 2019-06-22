@@ -54,7 +54,32 @@ const decrypt = (filePath, password) => {
   });
 };
 
+const encryptString = (text, password) => {
+  const key = getCipherKey(password);
+  const IV = crypto.randomBytes(16);
+
+  const cipher = crypto.createCipheriv(CIPHER_ALGORITHM, key, IV);
+  const encrypted = cipher.update(text, 'utf8', 'base64');
+
+  return {
+    IV: IV.toString('hex'),
+    data: encrypted + cipher.final('base64'),
+  };
+};
+
+const decryptString = (encrypted, password) => {
+  const { data, IV } = encrypted;
+  const key = getCipherKey(password);
+
+  const decipher = crypto.createDecipheriv(CIPHER_ALGORITHM, key, Buffer.from(IV, 'hex'));
+  const decrypted = decipher.update(data, 'base64', 'utf8');
+
+  return decrypted + decipher.final('utf8');
+};
+
 module.exports = {
   encrypt,
   decrypt,
+  encryptString,
+  decryptString,
 };

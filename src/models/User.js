@@ -36,11 +36,14 @@ UserSchema.methods.setPassword = function setPassword(password) {
 UserSchema.methods.generateJWT = function generateJWT() {
   return jwt.sign(
     {
+      // id: this._id, TODO
       email: this.email,
       confirmed: this.confirmed,
-      passHash: this.passwordHash,
     },
     process.env.JWT_SECRET,
+    {
+      expiresIn: '1h',
+    },
   );
 };
 

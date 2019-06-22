@@ -1,4 +1,4 @@
-const { isValidPassword } = require('./validation');
+const { isValidPassword } = require('../validation');
 
 test('should return false if length less than 8', () => {
   expect(isValidPassword('1')).toBe(false);

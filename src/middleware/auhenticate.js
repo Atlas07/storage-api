@@ -22,15 +22,18 @@ const authenticate = (req, res, next) => {
 
   const token = decryptString(encryptedToken, process.env.JWE_SECRET);
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: 'Invalid token' });
     }
 
-    User.find(decoded.email).then((user) => {
+    try {
+      const user = await User.find(decoded.email);
       req.currentUser = user;
       next();
-    });
+    } catch (error) {
+      res.status(401).json({ error: 'No such user with such email' });
+    }
   });
 };
 

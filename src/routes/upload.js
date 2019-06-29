@@ -1,7 +1,5 @@
 const path = require('path');
-const fs = require('fs');
 const Router = require('express-promise-router');
-const { promisify } = require('util');
 
 const { authenticate } = require('../middleware/auhenticate');
 const { encrypt } = require('../utils/crypt');
@@ -13,20 +11,13 @@ router.use(authenticate);
 
 router.post('/', async (req, res) => {
   try {
-    const { _id, email } = req.currentUser;
     const fileRecord = await File.create('text.txt');
-
-    await User.addFile(email, fileRecord.id);
-
-    const uploadDir = path.resolve(`./storage/${_id}`);
-    const createDirAsync = promisify(fs.mkdir);
-
-    await createDirAsync(uploadDir);
+    const userRecord = await User.addFile(req.currentUser.email, fileRecord.id);
 
     req.pipe(req.busboy);
 
     req.busboy.on('file', (fieldname, file, filename) => {
-      const uploadPath = path.join(uploadDir, filename);
+      const uploadPath = path.join(`./storage/${userRecord.id}`, fileRecord.id);
       const test = encrypt(filename, uploadPath, 'haha_Test');
       test(file);
     });

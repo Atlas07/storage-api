@@ -2,9 +2,10 @@ const create = User => (email, password) => {
   const user = new User({ email });
 
   user.setPassword(password);
+
   return user
     .save()
-    .then(record => record.toAuthJSON())
+    .then(record => record)
     .catch((e) => {
       throw e.errors.email.message;
     });
@@ -26,7 +27,7 @@ const addFile = User => (email, filename) => {
     },
   };
 
-  User.findOneAndUpdate({ email }, update)
+  return User.findOneAndUpdate({ email }, update)
     .then((record) => {
       if (record) {
         return record;

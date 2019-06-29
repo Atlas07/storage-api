@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const busboy = require('connect-busboy');
 
 const constants = require('./constants');
 const mountRoutes = require('./routes');
@@ -16,6 +17,10 @@ app.use(
     extended: true,
   }),
 );
+app.use(busboy({
+  highWaterMark: 4 * 1024 * 1024, // 4 MiB buffer
+}));
+
 mountRoutes(app);
 
 mongoose

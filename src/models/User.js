@@ -45,7 +45,8 @@ UserSchema.methods.generateJWT = function generateJWT() {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: '1h',
+      // TODO: change in prod
+      expiresIn: '30d',
     },
   );
 };

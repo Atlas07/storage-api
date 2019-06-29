@@ -7,10 +7,7 @@ describe('UserService test', () => {
 
   describe('User.create test', () => {
     it('creates new user', async () => {
-      const toAuthJSON = jest.fn();
-      const save = jest.fn().mockResolvedValue({
-        toAuthJSON,
-      });
+      const save = jest.fn().mockResolvedValue({});
       const setPassword = jest.fn();
 
       const MockModel = function MockModel(data) {
@@ -26,7 +23,6 @@ describe('UserService test', () => {
 
       expect(save.mock.calls.length).toBe(1);
       expect(setPassword.mock.calls.length).toBe(1);
-      expect(toAuthJSON.mock.calls.length).toBe(1);
     });
 
     it('throw error if user already exists', async () => {

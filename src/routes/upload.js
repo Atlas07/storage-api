@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
       res.json({ uploaded: true });
     });
   } catch (err) {
-    if (err && !err.code === 'EEXIST') {
+    if (err && err.code !== 'EEXIST') {
       res.status(400).json({ error: err });
     }
   }

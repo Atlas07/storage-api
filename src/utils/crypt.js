@@ -11,7 +11,7 @@ const getCipherKey = password => crypto
   .update(password)
   .digest();
 
-const encrypt = (filename, filePath, password) => (file) => {
+const encryptFile = (filename, filePath, password) => (file) => {
   const initVect = crypto.randomBytes(16);
   const gzip = zlib.createGzip();
   const writeStream = fs.createWriteStream(filePath);
@@ -31,23 +31,23 @@ const encrypt = (filename, filePath, password) => (file) => {
   });
 };
 
-const encryptFile = (filePath, password) => {
-  const initVect = crypto.randomBytes(16);
+// const encryptFile = (filePath, password) => {
+//   const initVect = crypto.randomBytes(16);
 
-  const readStream = fs.createReadStream(filePath);
-  const gzip = zlib.createGzip();
-  const writeStream = fs.createWriteStream(filePath);
+//   const readStream = fs.createReadStream(filePath);
+//   const gzip = zlib.createGzip();
+//   const writeStream = fs.createWriteStream(filePath);
 
-  const cipherKey = getCipherKey(password);
-  const cipher = crypto.createCipheriv(CIPHER_ALGORITHM, cipherKey, initVect);
-  const appendInitVect = new AppendInitVect(initVect);
+//   const cipherKey = getCipherKey(password);
+//   const cipher = crypto.createCipheriv(CIPHER_ALGORITHM, cipherKey, initVect);
+//   const appendInitVect = new AppendInitVect(initVect);
 
-  readStream
-    .pipe(gzip)
-    .pipe(cipher)
-    .pipe(appendInitVect)
-    .pipe(writeStream);
-};
+//   readStream
+//     .pipe(gzip)
+//     .pipe(cipher)
+//     .pipe(appendInitVect)
+//     .pipe(writeStream);
+// };
 
 const decryptFile = (filePath, password) => {
   const readInitVect = fs.createReadStream(filePath, { end: 15 });
@@ -122,5 +122,4 @@ module.exports = {
   decryptFile,
   encryptString,
   decryptString,
-  encrypt,
 };

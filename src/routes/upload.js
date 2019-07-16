@@ -2,7 +2,7 @@ const path = require('path');
 const Router = require('express-promise-router');
 
 const { authenticate } = require('../middleware/auhenticate');
-const { encryptFile } = require('../utils/crypt');
+const { createSaveFileStream } = require('../utils/upload');
 const { User, File } = require('../services');
 
 const router = new Router();
@@ -18,9 +18,9 @@ router.post('/', (req, res) => {
       const userRecord = await User.addFile(req.currentUser.email, fileRecord.id);
 
       const uploadPath = path.join(`./storage/${userRecord.id}`, fileRecord.id);
-      const encryptStream = encryptFile(filename, uploadPath, fileRecord.passwordHash);
+      const saveFileStream = createSaveFileStream(filename, uploadPath, fileRecord.passwordHash);
 
-      encryptStream(file);
+      saveFileStream(file);
     });
 
     req.busboy.on('finish', () => {

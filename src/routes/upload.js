@@ -9,27 +9,30 @@ const router = new Router();
 
 router.use(authenticate);
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
     req.pipe(req.busboy);
 
     req.busboy.on('file', async (fieldname, file, filename) => {
-      const fileRecord = await File.create(filename);
-      const userRecord = await User.addFile(req.currentUser.email, fileRecord.id);
+      try {
+        const fileRecord = await File.create(filename);
+        const userRecord = await User.addFile(req.currentUser.email, fileRecord.id);
 
-      const uploadPath = path.join(`./storage/${userRecord.id}`, fileRecord.id);
-      const saveFileStream = createSaveFileStream(filename, uploadPath, fileRecord.passwordHash);
+        const uploadPath = path.join(`./storage/${userRecord.id}`, fileRecord.id);
+        const saveFileStream = createSaveFileStream(filename, uploadPath, fileRecord.passwordHash);
 
-      saveFileStream(file);
+        await saveFileStream(file);
+      } catch (error) {
+        // TODO: generate error response
+        res.status(400).json({ error: 'Upload failed' });
+      }
     });
 
     req.busboy.on('finish', () => {
       res.json({ uploaded: true });
     });
   } catch (err) {
-    if (err && err.code !== 'EEXIST') {
-      res.status(400).json({ error: err });
-    }
+    res.status(400).json({ error: 'Upload failed' });
   }
 });
 

@@ -24,7 +24,12 @@ router.post('/', async (req, res) => {
         await saveFileStream(file);
       } catch (error) {
         // TODO: generate error response
-        res.status(400).json({ error: 'Upload failed' });
+        res.status(400).json({
+          error: {
+            message: error.message,
+            filename,
+          },
+        });
       }
     });
 
@@ -32,7 +37,7 @@ router.post('/', async (req, res) => {
       res.json({ uploaded: true });
     });
   } catch (err) {
-    res.status(400).json({ error: 'Upload failed' });
+    res.status(400).json({ error: 'Upload has failed' });
   }
 });
 

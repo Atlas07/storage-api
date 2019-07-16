@@ -24,8 +24,7 @@ const createSaveFileStream = (filename, filePath, password) => async (fileStream
     console.log(`Upload of ${filename} has finished`);
   } catch (err) {
     console.error(`Upload of ${filename} has failed`);
-    console.log(err);
-    throw err;
+    throw new Error('Upload has failed');
   }
 };
 

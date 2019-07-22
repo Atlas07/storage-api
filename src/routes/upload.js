@@ -24,6 +24,7 @@ router.post('/', async (req, res) => {
         await saveFileStream(file);
       } catch (error) {
         // TODO: generate error response
+        // TODO: move to better place (from controller)
         res.status(400).json({
           error: {
             message: error.message,
@@ -36,7 +37,12 @@ router.post('/', async (req, res) => {
     req.busboy.on('finish', () => {
       res.json({ uploaded: true });
     });
+
+    req.busboy.on('error', (err) => {
+      console.log('err', err);
+    });
   } catch (err) {
+    console.log('err', err);
     res.status(400).json({ error: 'Upload has failed' });
   }
 });

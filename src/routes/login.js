@@ -5,7 +5,7 @@ const { User } = require('../services');
 
 const router = new Router();
 
-router.post('/register', async (req, res) => {
+router.post('/', async (req, res) => {
   const { email, password } = req.body;
 
   if (!isValidEmail(email) || !isValidPassword(password)) {
@@ -13,10 +13,12 @@ router.post('/register', async (req, res) => {
   }
 
   try {
-    const user = await User.create(email, password);
-    res.json({ user });
+    const user = await User.find(email);
+
+    res.json({ user: user.toAuthJSON() });
   } catch (e) {
-    res.status(400).json({ error: e });
+    console.log(e);
+    res.status(400).json({ error: 'Invalid credentials' });
   }
 });
 

@@ -92,4 +92,5 @@ module.exports = {
   createDecryptStream,
   encryptString,
   decryptString,
+  getCipherKey,
 };

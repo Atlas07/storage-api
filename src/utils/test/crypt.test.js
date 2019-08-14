@@ -1,4 +1,9 @@
-const { encryptString, decryptString } = require('../crypt');
+const {
+  encryptString,
+  decryptString,
+  createEncryptStream,
+  getCipherKey,
+} = require('../crypt');
 
 // TODO: test other func
 
@@ -84,5 +89,23 @@ describe('test decryptString', () => {
 
     expect(decrypted1).toMatchObject(new Error('Missed password'));
     expect(decrypted2).toMatchObject(new Error('Missed password'));
+  });
+});
+
+describe('test createEncryptStream', () => {
+  it('should return { cipher, appendInitVect } obj', () => {
+    const stream = createEncryptStream('pass');
+
+    expect(stream.cipher).toBeDefined();
+    expect(stream.appendInitVect).toBeDefined();
+  });
+});
+
+describe('test getCipherKey', () => {
+  it('should cipherKey', () => {
+    const key = getCipherKey('haha');
+
+    expect(key.length).toBe(32);
+    expect(Buffer.isBuffer(key)).toBe(true);
   });
 });

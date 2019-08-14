@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require('util');
 const Router = require('express-promise-router');
 
 const { isValidEmail, isValidPassword } = require('../utils/validation');
@@ -14,7 +17,13 @@ router.post('/', async (req, res) => {
 
   try {
     const user = await User.create(email, password);
-    res.json({ user });
+
+    const uploadDir = path.resolve(`./storage/${user.id}`);
+    const createDirAsync = promisify(fs.mkdir);
+
+    await createDirAsync(uploadDir);
+
+    res.json({ user: user.toAuthJSON() });
   } catch (e) {
     res.status(400).json({ error: e });
   }

@@ -13,9 +13,11 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    const user = await User.find(email, password);
-    res.json({ user });
+    const user = await User.find(email);
+
+    res.json({ user: user.toAuthJSON() });
   } catch (e) {
+    console.log(e);
     res.status(400).json({ error: 'Invalid credentials' });
   }
 });

@@ -7,10 +7,7 @@ describe('UserService test', () => {
 
   describe('User.create test', () => {
     it('creates new user', async () => {
-      const toAuthJSON = jest.fn();
-      const save = jest.fn().mockResolvedValue({
-        toAuthJSON,
-      });
+      const save = jest.fn().mockResolvedValue({});
       const setPassword = jest.fn();
 
       const MockModel = function MockModel(data) {
@@ -26,7 +23,6 @@ describe('UserService test', () => {
 
       expect(save.mock.calls.length).toBe(1);
       expect(setPassword.mock.calls.length).toBe(1);
-      expect(toAuthJSON.mock.calls.length).toBe(1);
     });
 
     it('throw error if user already exists', async () => {
@@ -64,11 +60,7 @@ describe('UserService test', () => {
 
   describe('User.find test', () => {
     it('finds existed user', async () => {
-      const toAuthJSON = jest.fn();
-      const isValidPassword = jest.fn().mockReturnValue(true);
       const findOne = jest.fn().mockResolvedValue({
-        toAuthJSON,
-        isValidPassword,
         record: {},
       });
 
@@ -83,8 +75,6 @@ describe('UserService test', () => {
       await user.find('test@gmail.com', 'pass');
 
       expect(findOne.mock.calls.length).toBe(1);
-      expect(isValidPassword.mock.calls.length).toBe(1);
-      expect(toAuthJSON.mock.calls.length).toBe(1);
     });
 
     it('throw err if invalid credentials provided', async () => {

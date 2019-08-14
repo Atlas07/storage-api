@@ -1,6 +1,5 @@
 const crypto = require('crypto');
 const fs = require('fs');
-const zlib = require('zlib');
 
 const AppendInitVect = require('./AppendInitVect');
 
@@ -10,6 +9,16 @@ const getCipherKey = password => crypto
   .createHash('sha256')
   .update(password)
   .digest();
+
+const streamToString = (stream) => {
+  const chunks = [];
+
+  return new Promise((resolve, reject) => {
+    stream.on('data', chunk => chunks.push(chunk));
+    stream.on('error', reject);
+    stream.on('end', () => resolve(Buffer.concat(chunks)));
+  });
+};
 
 const createEncryptStream = (password) => {
   const initVect = crypto.randomBytes(16);
@@ -24,28 +33,14 @@ const createEncryptStream = (password) => {
   };
 };
 
-const decryptFile = (filePath, password) => {
-  const readInitVect = fs.createReadStream(filePath, { end: 15 });
-  let initVect;
+const createDecryptStream = async (filePath, password) => {
+  const IVStream = fs.createReadStream(filePath, { end: 15 });
+  const initVect = await streamToString(IVStream);
 
-  readInitVect.on('data', (chunk) => {
-    initVect = chunk;
-  });
+  const cipherKey = getCipherKey(password);
+  const decipher = crypto.createDecipheriv(CIPHER_ALGORITHM, cipherKey, initVect);
 
-  readInitVect.on('close', () => {
-    const readStream = fs.createReadStream(filePath, { start: 16 });
-    const writeStream = fs.createWriteStream(filePath);
-
-    const cipherKey = getCipherKey(password);
-    const decipher = crypto.createDecipheriv(CIPHER_ALGORITHM, cipherKey, initVect);
-
-    const unzip = zlib.createGunzip();
-
-    readStream
-      .pipe(decipher)
-      .pipe(unzip)
-      .pipe(writeStream);
-  });
+  return decipher;
 };
 
 const encryptString = (text, password) => {
@@ -94,7 +89,7 @@ const decryptString = (encrypted, password) => {
 
 module.exports = {
   createEncryptStream,
-  decryptFile,
+  createDecryptStream,
   encryptString,
   decryptString,
 };

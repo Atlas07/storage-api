@@ -6,6 +6,13 @@ const createGzipStream = () => {
   return gzip;
 };
 
+const createGunzipStream = () => {
+  const gunzip = zlib.createGunzip();
+
+  return gunzip;
+};
+
 module.exports = {
   createGzipStream,
+  createGunzipStream,
 };

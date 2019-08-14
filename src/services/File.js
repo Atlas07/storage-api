@@ -6,6 +6,17 @@ const create = File => (name, password = null) => {
   return file.save();
 };
 
+const findById = File => id => (
+  File.findById(id, (err, record) => {
+    if (err) {
+      console.log(err);
+    }
+
+    return record;
+  })
+);
+
 module.exports = File => ({
   create: create(File),
+  findById: findById(File),
 });

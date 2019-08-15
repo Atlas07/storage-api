@@ -1,5 +1,7 @@
 # Storage file app
 
+[![Build Status](https://travis-ci.org/Atlas07/storage-api.svg?branch=develop)](https://travis-ci.org/Atlas07/storage-api)
+
 ## History
 
 This repository contains the code for a storage file API.
